@@ -51,6 +51,7 @@ import sys.FileSystem;
 import flash.media.Sound;
 #end
 
+
 using StringTools;
 
 class ChartingState extends MusicBeatState
@@ -2694,17 +2695,21 @@ class ChartingState extends MusicBeatState
 		return noteData;
 	}
 
-	function loadJson(song:String):Void
+function loadJson(song:String):Void
 	{
 		//make it look sexier if possible
-		if (CoolUtil.difficulties[PlayState.storyDifficulty] != "Normal"){
-		PlayState.SONG = Song.loadFromJson(song.toLowerCase()+"-"+CoolUtil.difficulties[PlayState.storyDifficulty], song.toLowerCase());
-			
-		}else{
-		PlayState.SONG = Song.loadFromJson(song.toLowerCase(), song.toLowerCase());
+		if (CoolUtil.difficulties[PlayState.storyDifficulty] != "Normal" && CoolUtil.difficulties[PlayState.storyDifficulty] != null)
+	    {
+	        PlayState.SONG = Song.loadFromJson(song.toLowerCase()+"-"+CoolUtil.difficulties[PlayState.storyDifficulty], song.toLowerCase());
+	    }
+        else
+	    {   
+	    	PlayState.SONG = Song.loadFromJson(song.toLowerCase(), song.toLowerCase());
 		}
+
 		MusicBeatState.resetState();
 	}
+
 
 	function autosaveSong():Void
 	{

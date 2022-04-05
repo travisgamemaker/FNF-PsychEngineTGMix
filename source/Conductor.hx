@@ -41,7 +41,7 @@ class Conductor
 		// var diff = Math.abs(note.strumTime - Conductor.songPosition) / (PlayState.songMultiplier >= 1 ? PlayState.songMultiplier : 1);
 		for(i in 0...timingWindows.length) // based on 4 timing windows, will break with anything else
 		{
-			if (diff <= timingWindows[Math.round(Math.min(i, timingWindows.length - 1))])
+			if (diff <= ClientPrefs.noteHitboxDelay/100 + timingWindows[Math.round(Math.min(i, timingWindows.length - 1))])
 			{
 				return windowNames[i];
 			}

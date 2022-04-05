@@ -30,6 +30,7 @@ class ClientPrefs {
 	public static var controllerMode:Bool = false;
 	public static var hitsoundVolume:Float = 0;
 	public static var pauseMusic:String = 'Tea Time';
+	public static var noteHitboxDelay:Int = 0;
 	public static var gameplaySettings:Map<String, Dynamic> = [
 		'scrollspeed' => 1.0,
 		'scrolltype' => 'multiplicative', 
@@ -106,6 +107,7 @@ class ClientPrefs {
 		FlxG.save.data.hideHud = hideHud;
 		FlxG.save.data.arrowHSV = arrowHSV;
 		FlxG.save.data.imagesPersist = imagesPersist;
+		FlxG.save.data.noteHitboxDelay = noteHitboxDelay;
 		FlxG.save.data.ghostTapping = ghostTapping;
 		FlxG.save.data.timeBarType = timeBarType;
 		FlxG.save.data.scoreZoom = scoreZoom;
@@ -186,6 +188,9 @@ class ClientPrefs {
 		}
 		if(FlxG.save.data.arrowHSV != null) {
 			arrowHSV = FlxG.save.data.arrowHSV;
+		}
+		if(FlxG.save.data.noteHitboxDelay != null) {
+			noteHitboxDelay = FlxG.save.data.noteHitboxDelay;
 		}
 		if(FlxG.save.data.ghostTapping != null) {
 			ghostTapping = FlxG.save.data.ghostTapping;

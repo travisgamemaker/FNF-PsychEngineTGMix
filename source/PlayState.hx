@@ -13,6 +13,8 @@ import flixel.FlxG;
 import flixel.FlxGame;
 import flixel.FlxObject;
 import flixel.FlxSprite;
+import Shaders;
+import openfl.filters.ShaderFilter;
 import flixel.FlxState;
 import flixel.FlxSubState;
 import flixel.addons.display.FlxGridOverlay;
@@ -78,6 +80,15 @@ class PlayState extends MusicBeatState
 		['Sick!', 1], //From 90% to 99%
 		['Perfect!!', 1] //The value on this one isn't used actually, since Perfect is always "1"
 	];
+
+
+		//SHADERS
+	public var camGameShaders:Array<ShaderEffect> = [];
+	public var camHUDShaders:Array<ShaderEffect> = [];
+	public var camOtherShaders:Array<ShaderEffect> = [];
+	public var shaderUpdates:Array<Float->Void> = [];
+
+
 	public var modchartTweens:Map<String, FlxTween> = new Map<String, FlxTween>();
 	public var modchartSprites:Map<String, ModchartSprite> = new Map<String, ModchartSprite>();
 	public var modchartTimers:Map<String, FlxTimer> = new Map<String, FlxTimer>();
@@ -1287,6 +1298,7 @@ class PlayState extends MusicBeatState
 	}
 
 	function startCharacterLua(name:String)
+
 	{
 		#if LUA_ALLOWED
 		var doPush:Bool = false;
@@ -1311,6 +1323,103 @@ class PlayState extends MusicBeatState
 		}
 		#end
 	}
+
+			public function addShaderToCamera(cam:String, effect:ShaderEffect)
+	{ // STOLE FROM ANDROMEDA
+
+		switch (cam.toLowerCase())
+		{
+			case 'camhud' | 'hud':
+				camHUDShaders.push(effect);
+				var newCamEffects:Array<BitmapFilter> = []; // IT SHUTS HAXE UP IDK WHY BUT WHATEVER IDK WHY I CANT JUST ARRAY<SHADERFILTER>
+				for (i in camHUDShaders)
+				{
+					newCamEffects.push(new ShaderFilter(i.shader));
+				}
+				camHUD.setFilters(newCamEffects);
+			case 'camother' | 'other':
+				camOtherShaders.push(effect);
+				var newCamEffects:Array<BitmapFilter> = []; // IT SHUTS HAXE UP IDK WHY BUT WHATEVER IDK WHY I CANT JUST ARRAY<SHADERFILTER>
+				for (i in camOtherShaders)
+				{
+					newCamEffects.push(new ShaderFilter(i.shader));
+				}
+				camOther.setFilters(newCamEffects);
+			case 'camgame' | 'game':
+				camGameShaders.push(effect);
+				var newCamEffects:Array<BitmapFilter> = []; // IT SHUTS HAXE UP IDK WHY BUT WHATEVER IDK WHY I CANT JUST ARRAY<SHADERFILTER>
+				for (i in camGameShaders)
+				{
+					newCamEffects.push(new ShaderFilter(i.shader));
+				}
+				camGame.setFilters(newCamEffects);
+			default:
+				if (modchartSprites.exists(cam))
+				{
+					Reflect.setProperty(modchartSprites.get(cam), "shader", effect.shader);
+				}
+				else if (modchartTexts.exists(cam))
+				{
+					Reflect.setProperty(modchartTexts.get(cam), "shader", effect.shader);
+				}
+				else
+				{
+					var OBJ = Reflect.getProperty(PlayState.instance, cam);
+					Reflect.setProperty(OBJ, "shader", effect.shader);
+				}
+		}
+	}
+	
+		public function removeShaderFromCamera(cam:String, effect:ShaderEffect)
+	{
+		switch (cam.toLowerCase())
+		{
+			case 'camhud' | 'hud':
+				camHUDShaders.remove(effect);
+				var newCamEffects:Array<BitmapFilter> = [];
+				for (i in camHUDShaders)
+				{
+					newCamEffects.push(new ShaderFilter(i.shader));
+				}
+				camHUD.setFilters(newCamEffects);
+			case 'camother' | 'other':
+				camOtherShaders.remove(effect);
+				var newCamEffects:Array<BitmapFilter> = [];
+				for (i in camOtherShaders)
+				{
+					newCamEffects.push(new ShaderFilter(i.shader));
+				}
+				camOther.setFilters(newCamEffects);
+			default:
+				camGameShaders.remove(effect);
+				var newCamEffects:Array<BitmapFilter> = [];
+				for (i in camGameShaders)
+				{
+					newCamEffects.push(new ShaderFilter(i.shader));
+				}
+				camGame.setFilters(newCamEffects);
+		}
+	}
+	
+		public function clearShaderFromCamera(cam:String)
+	{
+		switch (cam.toLowerCase())
+		{
+			case 'camhud' | 'hud':
+				camHUDShaders = [];
+				var newCamEffects:Array<BitmapFilter> = [];
+				camHUD.setFilters(newCamEffects);
+			case 'camother' | 'other':
+				camOtherShaders = [];
+				var newCamEffects:Array<BitmapFilter> = [];
+				camOther.setFilters(newCamEffects);
+			default:
+				camGameShaders = [];
+				var newCamEffects:Array<BitmapFilter> = [];
+				camGame.setFilters(newCamEffects);
+		}
+	}
+
 	
 	function startCharacterPos(char:Character, ?gfCheck:Bool = false) {
 		if(gfCheck && char.curCharacter.startsWith('gf')) { //IF DAD IS GIRLFRIEND, HE GOES TO HER POSITION
@@ -3855,6 +3964,12 @@ class PlayState extends MusicBeatState
 
 		callOnLuas('opponentNoteHit', [notes.members.indexOf(note), Math.abs(note.noteData), note.noteType, note.isSustainNote]);
 
+		//if anything goes wrong remove from here
+		if(!note.noteSplashDisabled && !note.isSustainNote) {
+				spawnOpponentNoteSplashOnNote(note);
+			}
+				//to here
+
 		if (!note.isSustainNote)
 		{
 			note.kill();
@@ -3982,7 +4097,16 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	public function spawnNoteSplash(x:Float, y:Float, data:Int, ?note:Note = null) {
+function spawnOpponentNoteSplashOnNote(note:Note) {
+		if(ClientPrefs.noteSplashes && note != null) {
+			var strum:StrumNote = opponentStrums.members[note.noteData];
+			if(strum != null) {
+				spawnNoteSplash(strum.x, strum.y, note.noteData, note);
+			}
+		}
+	}
+
+public function spawnNoteSplash(x:Float, y:Float, data:Int, ?note:Note = null) {
 		var skin:String = 'noteSplashes';
 		if(PlayState.SONG.splashSkin != null && PlayState.SONG.splashSkin.length > 0) skin = PlayState.SONG.splashSkin;
 		
@@ -4000,6 +4124,26 @@ class PlayState extends MusicBeatState
 		splash.setupNoteSplash(x, y, data, skin, hue, sat, brt);
 		grpNoteSplashes.add(splash);
 	}
+
+	public function spawnOpponentNoteSplash(x:Float, y:Float, data:Int, ?note:Note = null) {
+		var skin:String = 'noteSplashes';
+		if(PlayState.SONG.splashSkin != null && PlayState.SONG.splashSkin.length > 0) skin = PlayState.SONG.splashSkin;
+		
+		var hue:Float = ClientPrefs.arrowHSV[data % 4][0] / 360;
+		var sat:Float = ClientPrefs.arrowHSV[data % 4][1] / 100;
+		var brt:Float = ClientPrefs.arrowHSV[data % 4][2] / 100;
+		if(note != null) {
+			skin = note.noteSplashTexture;
+			hue = note.noteSplashHue;
+			sat = note.noteSplashSat;
+			brt = note.noteSplashBrt;
+		}
+
+		var splash:NoteSplash = grpNoteSplashes.recycle(NoteSplash);
+		splash.setupNoteSplash(x, y, data, skin, hue, sat, brt);
+		grpNoteSplashes.add(splash);
+	}
+
 
 	var fastCarCanDrive:Bool = true;
 

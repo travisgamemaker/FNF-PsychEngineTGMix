@@ -18,6 +18,8 @@ import flixel.util.FlxSort;
 import flixel.util.FlxTimer;
 import flixel.input.keyboard.FlxKey;
 import openfl.events.KeyboardEvent;
+import Shaders;
+import openfl.filters.ShaderFilter;
 import FunkinLua;
 
 using StringTools;
