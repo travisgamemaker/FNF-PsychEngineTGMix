@@ -1,5 +1,5 @@
-# Friday Night Funkin' - Psych Engine TGMix
-A Modified version of Psych Engine made to add in some features that weren't originally in Psych Engine.
+# Friday Night Funkin' - Psych Engine
+Engine originally used on [Mind Games Mod](https://gamebanana.com/mods/301107), intended to be a fix for the vanilla version's many issues while keeping the casual play aspect of it. Also aiming to be an easier alternative to newbie coders.
 
 ## Installation:
 You must have [the most up-to-date version of Haxe](https://haxe.org/download/), seriously, stop using 4.1.5, it misses some stuff.
@@ -10,10 +10,7 @@ To install LuaJIT do this: `haxelib git linc_luajit https://github.com/AndreiRud
 
 ...Or if you don't want your mod to be able to run .lua scripts, delete the "LUA_ALLOWED" line on Project.xml
 
-## Credits (TGMix):
-travisgamemaker - making a fork of Psych Engine so bad that it killed half of North America
-
-## Credits (Unmodded Psych Engine):
+## Credits:
 * Shadow Mario - Coding
 * RiverOaken - Arts and Animations
 * bbpanzu - Assistant Coding
@@ -29,36 +26,7 @@ travisgamemaker - making a fork of Psych Engine so bad that it killed half of No
 * Nebula_Zorua - VCR Shader code
 _____________________________________
 
-# Features (TGMix)
-
-## Readded shaders!
-
-insert image link here
-
-## colorswap appliable as a shader
-
-insert image link here
-
-## Opponent Note splashes
-
-image
-
-## Windows Message boxes Createable Through lua
-
-image (if able to)
-
-## Extra Heys in Bopeebo
-
-image
-
-## (Planned) .frag support for shaders
-
-(there's no image because i haven't added it yet)
-
-_____________________________________
-
-
-# Features (Unmodded Psych Engine)
+# Features
 
 ## Attractive animated dialogue boxes:
 
