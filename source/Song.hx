@@ -115,7 +115,6 @@ class Song
 			rawJson = rawJson.substr(0, rawJson.length - 1);
 			// LOL GOING THROUGH THE BULLSHIT TO CLEAN IDK WHATS STRANGE
 		}
-
 		// FIX THE CASTING ON WINDOWS/NATIVE
 		// Windows???
 		// trace(songData);

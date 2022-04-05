@@ -7,6 +7,7 @@ import llua.Convert;
 
 import animateatlas.AtlasFrameMaker;
 import flixel.FlxG;
+import Shaders;
 import flixel.addons.effects.FlxTrail;
 import flixel.input.keyboard.FlxKey;
 import flixel.tweens.FlxTween;
@@ -29,6 +30,7 @@ import openfl.utils.Assets;
 import flixel.math.FlxMath;
 import flixel.util.FlxSave;
 import flixel.addons.transition.FlxTransitionableState;
+import hscript.Expr;
 #if sys
 import sys.FileSystem;
 import sys.io.File;
@@ -64,21 +66,16 @@ class FunkinLua {
 		//trace('Lua version: ' + Lua.version());
 		//trace("LuaJIT version: " + Lua.versionJIT());
 
-		LuaL.dostring(lua, CLENSE);
 		var result:Dynamic = LuaL.dofile(lua, script);
 		var resultStr:String = Lua.tostring(lua, result);
 		if(resultStr != null && result != 0) {
-			trace('Error on lua script! ' + resultStr);
-			#if windows
-			lime.app.Application.current.window.alert(resultStr, 'Error on lua script!');
-			#else
-			luaTrace('Error loading lua script: "$script"\n' + resultStr,true,false);
-			#end
+			lime.app.Application.current.window.alert(resultStr, 'Error on .LUA script!');
+			trace('Error on .LUA script! ' + resultStr);
 			lua = null;
 			return;
 		}
 		scriptName = script;
-		trace('lua file loaded succesfully:' + script);
+		trace('Lua file loaded succesfully:' + script);
 
 		#if (haxe >= "4.0.0")
 		accessedProps = new Map();
@@ -112,6 +109,7 @@ class FunkinLua {
 		
 		// Block require and os, Should probably have a proper function but this should be good enough for now until someone smarter comes along and recreates a safe version of the OS library
 		set('require', false);
+		set('os', false);
 
 		// Camera poo
 		set('cameraX', 0);
@@ -180,6 +178,7 @@ class FunkinLua {
 		set('healthBarAlpha', ClientPrefs.healthBarAlpha);
 		set('noResetButton', ClientPrefs.noReset);
 		set('lowQuality', ClientPrefs.lowQuality);
+		set('noteHitboxDelay', ClientPrefs.noteHitboxDelay);
 
 		#if windows
 		set('buildTarget', 'windows');
@@ -989,6 +988,11 @@ class FunkinLua {
 				object.makeGraphic(width, height, colorNum);
 			}
 		});
+
+				Lua_helper.add_callback(lua, "createMsgBox", function(textInBox:String) {
+					lime.app.Application.current.window.alert(resultStr, textInBox); //i have no idea wtf i'm doing tbh
+		});
+				//jjhhhbbbbbhgb sorry bug on the keyboard again
 		Lua_helper.add_callback(lua, "addAnimationByPrefix", function(obj:String, name:String, prefix:String, framerate:Int = 24, loop:Bool = true) {
 			if(PlayState.instance.modchartSprites.exists(obj)) {
 				var cock:ModchartSprite = PlayState.instance.modchartSprites.get(obj);
@@ -1726,6 +1730,85 @@ class FunkinLua {
 			FlxG.sound.music.fadeOut(duration, toValue);
 			luaTrace('musicFadeOut is deprecated! Use soundFadeOut instead.', false, true);
 		});
+
+
+
+				//SHADER SHIT
+		
+		Lua_helper.add_callback(lua, "addChromaticAbberationEffect", function(camera:String,chromeOffset:Float = 0.005) {
+			
+			PlayState.instance.addShaderToCamera(camera, new ChromaticAberrationEffect(chromeOffset));
+			
+		});
+		
+		Lua_helper.add_callback(lua, "addScanlineEffect", function(camera:String,lockAlpha:Bool=false) {
+			
+			PlayState.instance.addShaderToCamera(camera, new ScanlineEffect(lockAlpha));
+			
+		});
+		Lua_helper.add_callback(lua, "addGrainEffect", function(camera:String,grainSize:Float,lumAmount:Float,lockAlpha:Bool=false) {
+			
+			PlayState.instance.addShaderToCamera(camera, new GrainEffect(grainSize,lumAmount,lockAlpha));
+			
+		});
+		Lua_helper.add_callback(lua, "addTiltshiftEffect", function(camera:String,blurAmount:Float,center:Float) {
+			
+			PlayState.instance.addShaderToCamera(camera, new TiltshiftEffect(blurAmount,center));
+			
+		});
+		Lua_helper.add_callback(lua, "addVCREffect", function(camera:String,glitchFactor:Float = 0.0,distortion:Bool=true,perspectiveOn:Bool=true,vignetteMoving:Bool=true) {
+			
+			PlayState.instance.addShaderToCamera(camera, new VCRDistortionEffect(glitchFactor,distortion,perspectiveOn,vignetteMoving));
+			
+		});
+		Lua_helper.add_callback(lua, "addGlitchEffect", function(camera:String,waveSpeed:Float = 0.1,waveFrq:Float = 0.1,waveAmp:Float = 0.1) {
+			
+			PlayState.instance.addShaderToCamera(camera, new GlitchEffect(waveSpeed,waveFrq,waveAmp));
+			
+		});
+		Lua_helper.add_callback(lua, "addPulseEffect", function(camera:String,waveSpeed:Float = 0.1,waveFrq:Float = 0.1,waveAmp:Float = 0.1) {
+			
+			PlayState.instance.addShaderToCamera(camera, new PulseEffect(waveSpeed,waveFrq,waveAmp));
+			
+		});
+		Lua_helper.add_callback(lua, "addDistortionEffect", function(camera:String,waveSpeed:Float = 0.1,waveFrq:Float = 0.1,waveAmp:Float = 0.1) {
+			
+			PlayState.instance.addShaderToCamera(camera, new DistortBGEffect(waveSpeed,waveFrq,waveAmp));
+			
+		});
+		Lua_helper.add_callback(lua, "addInvertEffect", function(camera:String,lockAlpha:Bool=false) {
+			
+			PlayState.instance.addShaderToCamera(camera, new InvertColorsEffect(lockAlpha));
+			
+		});
+		Lua_helper.add_callback(lua, "addGreyscaleEffect", function(camera:String) { //for dem funkies
+			
+			PlayState.instance.addShaderToCamera(camera, new GreyscaleEffect());
+			
+		});
+		Lua_helper.add_callback(lua, "addGrayscaleEffect", function(camera:String) { //for dem funkies
+			
+			PlayState.instance.addShaderToCamera(camera, new GreyscaleEffect());
+			
+		});
+		Lua_helper.add_callback(lua, "add3DEffect", function(camera:String,xrotation:Float=0,yrotation:Float=0,zrotation:Float=0,depth:Float=0) { //for dem funkies
+			
+			PlayState.instance.addShaderToCamera(camera, new ThreeDEffect(xrotation,yrotation,zrotation,depth));
+			
+		});
+		Lua_helper.add_callback(lua, "addBloomEffect", function(camera:String,intensity:Float = 0.35,blurSize:Float=1.0) { //saving for l8r
+			
+			PlayState.instance.addShaderToCamera(camera, new BloomEffect(blurSize/512.0,intensity));
+			
+		});
+		Lua_helper.add_callback(lua, "addHueShiftEffect", function(camera:String,hueCol:Float = 0, satCol:Float = 0, valCol:Float = 0) {
+			
+			PlayState.instance.addShaderToCamera(camera, new ColorShiftSwap(hueCol, satCol, valCol));
+			
+		});
+		Lua_helper.add_callback(lua, "clearEffects", function(camera:String) {
+			PlayState.instance.clearShaderFromCamera(camera);
+		});
 		
 		call('onCreate', []);
 		#end
@@ -2035,15 +2118,6 @@ class FunkinLua {
 	{
 		return PlayState.instance.isDead ? GameOverSubstate.instance : PlayState.instance;
 	}
-	static inline var CLENSE:String = "
-	os.execute = nil;
-	os.exit = nil;
-	package.loaded.os.execute = nil;
-	package.loaded.os.exit = nil;
-	process = nil;
-	package.loaded.process = nil;
-
-	"; // Fuck this, I can't figure out linc_lua, so I'mma set everything in Lua itself - Super
 }
 
 class ModchartSprite extends FlxSprite

@@ -137,6 +137,16 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 		option.changeValue = 0.1;
 		addOption(option);
 
+		var option:Option = new Option('Note Hitbox Delay',
+		'Its not actually Delaying any Hitboxes lol\nSmth to help with input lag\nHigher values mean you have to hit later ig.',
+		'noteHitboxDelay',
+		'int',
+		 0);
+		option.scrollSpeed = 10;
+		option.minValue = -1000;
+		option.maxValue = 1000;
+		addOption(option);
+
 		super();
 	}
 }
