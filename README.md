@@ -34,11 +34,13 @@ _____________________________________
 ## Readded shaders
 
 ![that's a nice argument  unfortunately, *destroys the fabric of reality*](https://user-images.githubusercontent.com/81720456/162594831-54853b69-75de-4c6b-be50-7116da5888cc.gif)
-*that's a nice argument  unfortunately, *destroys the fabric of reality**
+
+*that's a nice argument.  unfortunately, *destroys the fabric of reality**
 
 ## colorswap appliable as a shader
 
 ![dad with the super emeralds](https://user-images.githubusercontent.com/81720456/162595004-a9d8d96f-17cd-4a82-bf31-a664505f7dc2.gif)
+
 *DAD GOT ALL SUPER EMERALDS*
 *NOW DAD CAN BE HYPER DAD*
 
@@ -50,6 +52,7 @@ look at the gif above or below here ig
 ## Windows Message boxes Createable Through lua
 
 ![fuck you](https://user-images.githubusercontent.com/81720456/162595070-d833a5d5-d182-4961-b0e2-43e4a7a28b70.gif)
+
 *fuck you*
 
 ## Extra Heys in Bopeebo
