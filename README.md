@@ -51,10 +51,6 @@ image (if able to)
 
 image
 
-## (Planned) .frag support for shaders
-
-(there's no image because i haven't added it yet)
-
 _____________________________________
 
 
