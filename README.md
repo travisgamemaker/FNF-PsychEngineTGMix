@@ -57,7 +57,8 @@ look at the gif above or below here ig
 ## Extra Heys in Bopeebo
 
 ![ay ay](https://user-images.githubusercontent.com/81720456/162595034-4b8f097b-6c13-4bfb-8aad-e8118fe6fdfd.gif)
-*ay ay*
+
+*ay! ay!*
 
 
 _____________________________________
