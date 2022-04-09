@@ -43,8 +43,6 @@ _____________________________________
 
 *DAD GOT ALL SUPER EMERALDS*
 
-*NOW DAD CAN BE HYPER DAD*
-
 
 ## Opponent Note splashes
 
