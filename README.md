@@ -35,7 +35,7 @@ _____________________________________
 
 ![that's a nice argument  unfortunately, *destroys the fabric of reality*](https://user-images.githubusercontent.com/81720456/162594831-54853b69-75de-4c6b-be50-7116da5888cc.gif)
 
-*senpai destroys the fabric of reality out of anger*
+*senpai calmly destroys the fabric of reality*
 
 ## colorswap can be used as a shader
 
