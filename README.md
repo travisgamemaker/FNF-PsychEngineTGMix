@@ -31,7 +31,7 @@ _____________________________________
 
 # Features (TGMix)
 
-## Readded shaders!
+## Readded shaders! (will be replaced once new shader code is added)
 
 insert image link here
 
