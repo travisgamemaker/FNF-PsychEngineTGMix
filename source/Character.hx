@@ -68,6 +68,25 @@ class Character extends FlxSprite
 	public var danceIdle:Bool = false; //Character use "danceLeft" and "danceRight" instead of "idle"
 	public var skipDance:Bool = false;
 
+	public var spinYaw:Bool = false;
+	public var spinYawVal:Int = 0;
+	public var spinPitch:Bool = false;
+	public var spinPitchVal:Int = 0;
+	public var spinRoll:Bool = false;
+	public var spinRollVal:Int = 0;
+	public var yTween:FlxTween;
+	public var xTween:FlxTween;
+	public var originalY:Float = -1;
+	public var originalX:Float = -1;
+	public var circleTween:FlxTween;
+	public var initYaw:Float = 0;
+	public var initPitch:Float = 0;
+	public var initRoll:Float = 0;
+	public var initX:Float = 0;
+	public var initY:Float = 0;
+	public var initZ:Float = 0;
+
+
 	public var healthIcon:String = 'face';
 	public var animationsArray:Array<AnimArray> = [];
 
@@ -100,7 +119,6 @@ class Character extends FlxSprite
 		switch (curCharacter)
 		{
 			//case 'your character name in case you want to hardcode them instead':
-
                 modelName = "steve";
 				modelScale = 30;
 				modelSpeed = ["default" => 126 / 75];
@@ -412,6 +430,12 @@ class Character extends FlxSprite
 	public function playAnim(AnimName:String, Force:Bool = false, Reversed:Bool = false, Frame:Int = 0):Void
 	{
 		specialAnim = false;
+		if (isModel)
+		{
+			model.playAnim(AnimName, Force, Frame);
+		}
+		else
+		{
 		animation.play(AnimName, Force, Reversed, Frame);
 
 		var daOffset = animOffsets.get(AnimName);
@@ -439,6 +463,7 @@ class Character extends FlxSprite
 			}
 		}
 	}
+    }
 	
 	function loadMappedAnims():Void
 	{
