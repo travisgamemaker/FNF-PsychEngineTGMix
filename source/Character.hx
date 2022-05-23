@@ -1,5 +1,10 @@
 package;
 
+import away3d.events.AnimationStateEvent;
+import away3d.library.Asset3DLibrary;
+import away3d.core.base.data.Face;
+import away3d.errors.AbstractMethodError;
+
 import animateatlas.AtlasFrameMaker;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -96,6 +101,22 @@ class Character extends FlxSprite
 		{
 			//case 'your character name in case you want to hardcode them instead':
 
+                modelName = "steve";
+				modelScale = 30;
+				modelSpeed = ["default" => 126 / 75];
+				isModel = true;
+				loadGraphicFromSprite(Main.modelView.sprite);
+				initYaw = -45;
+				initY = -28;
+				updateHitbox();
+				noLoopList = ["idle", "singLEFT", "singRIGHT", "singDOWN", "singUP"];
+				Main.modelView.light.ambient = 1;
+				Main.modelView.light.specular = 0.0;
+				Main.modelView.light.diffuse = 0.0;
+
+
+
+
 			default:
 				var characterPath:String = 'characters/' + curCharacter + '.json';
 
@@ -125,6 +146,7 @@ class Character extends FlxSprite
 				//sparrow
 				//packer
 				//texture
+				//model
 				#if MODS_ALLOWED
 				var modTxtToFind:String = Paths.modsTxt(json.image);
 				var txtToFind:String = Paths.getPath('images/' + json.image + '.txt', TEXT);
@@ -139,6 +161,14 @@ class Character extends FlxSprite
 				{
 					spriteType = "packer";
 				}
+
+				if (FileSystem.exists(modTxtToFind) || FileSystem.exists(txtToFind) || Assets.exists(txtToFind))
+				#else
+				if (Assets.exists(Paths.getPath('images/' + json.image + '.md2', TEXT)))
+				#end
+			    {
+				    spriteType = "model";
+			    }
 				
 				#if MODS_ALLOWED
 				var modAnimToFind:String = Paths.modFolders('images/' + json.image + '/Animation.json');
@@ -165,13 +195,17 @@ class Character extends FlxSprite
 					
 					case "texture":
 						frames = AtlasFrameMaker.construct(json.image);
+
+                    case "model":
+                    //don't do shit. don't need an atlas? don't try to get one. might change this later.
 				}
-				imageFile = json.image;
+				imageFile = json.image; //will be the md2 file if it's a model
 
 				if(json.scale != 1) {
 					jsonScale = json.scale;
 					setGraphicSize(Std.int(width * jsonScale));
 					updateHitbox();
+					//REMEMBER TO ADD CODE HERE TO HAVE THE MODEL'S SCALE BE UPDATED ACCORDINGLLY
 				}
 
 				positionArray = json.position;
@@ -291,7 +325,7 @@ class Character extends FlxSprite
 					if(animation.curAnim.finished) playAnim(animation.curAnim.name, false, false, animation.curAnim.frames.length - 3);
 			}
 
-			if (!isPlayer)
+			if (!isPlayer && !isModel)
 			{
 				if (animation.curAnim.name.startsWith('sing'))
 				{
@@ -305,12 +339,50 @@ class Character extends FlxSprite
 				}
 			}
 
+
+		else if (!isPlayer && isModel)
+		{
+			if (model.currentAnim.startsWith('sing'))
+			{
+				holdTimer += elapsed;
+			}
+
+			var dadVar:Float = 4;
+
+			if (curCharacter == 'dad')
+				dadVar = 6.1;
+			if (holdTimer >= Conductor.stepCrochet * 0.0011 * singDuration)
+			{
+				dance();
+				holdTimer = 0;
+			}
+		}
+
+
 			if(animation.curAnim.finished && animation.getByName(animation.curAnim.name + '-loop') != null)
 			{
 				playAnim(animation.curAnim.name + '-loop');
 			}
 		}
 		super.update(elapsed);
+
+		if (isModel)
+		{
+			if (spinYaw)
+			{
+				model.addYaw(elapsed * spinYawVal);
+			}
+
+			if (spinPitch)
+			{
+				model.addPitch(elapsed * spinPitchVal);
+			}
+
+			if (spinRoll)
+			{
+				model.addRoll(elapsed * spinRollVal);
+			}
+		}
 	}
 
 	public var danced:Bool = false;
