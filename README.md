@@ -60,8 +60,6 @@ look at the gif above or below here ig
 
 *ay! ay!*
 
-### using FlxG.cameras.setDefaultDrawTarget instead because fuck you
-
 _____________________________________
 
 
