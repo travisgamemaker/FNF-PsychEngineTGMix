@@ -67,12 +67,19 @@ class TitleState extends MusicBeatState
 
 	var wackyImage:FlxSprite;
 
-	#if TITLE_SCREEN_EASTER_EGG
-	var easterEggKeys:Array<String> = [
-		'SHADOW', 'RIVER', 'SHUBS', 'BBPANZU'
-	];
+	var easterEggKeys:Array<String>;
 	var allowedKeys:String = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	var easterEggKeysBuffer:String = '';
+
+	#if TITLE_SCREEN_EASTER_EGG
+	easterEggKeys.insert(0, 'SHADOW')
+	easterEggKeys.insert(0, 'RIVER')
+	easterEggKeys.insert(0, 'SHUBS')
+	easterEggKeys.insert(0, 'BBPANZU')
+	#end
+
+	#if CRINGE_TITLE_SCREEN_EASTER_EGG
+	easterEggKeys.insert(0, 'CRINGE');
 	#end
 
 	var mustUpdate:Bool = false;
@@ -168,6 +175,9 @@ class TitleState extends MusicBeatState
 				titleJSON.gfx += 160;
 				titleJSON.gfy -= 10;
 			case 'BBPANZU':
+				titleJSON.gfx += 45;
+				titleJSON.gfy += 100;
+			case 'CRINGE':
 				titleJSON.gfx += 45;
 				titleJSON.gfy += 100;
 		}
@@ -299,6 +309,10 @@ class TitleState extends MusicBeatState
 				gfDance.animation.addByPrefix('danceLeft', 'Shub Title Bump', 24, false);
 				gfDance.animation.addByPrefix('danceRight', 'Shub Title Bump', 24, false);
 			case 'BBPANZU':
+				gfDance.frames = Paths.getSparrowAtlas('BBBump');
+				gfDance.animation.addByIndices('danceLeft', 'BB Title Bump', [14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27], "", 24, false);
+				gfDance.animation.addByIndices('danceRight', 'BB Title Bump', [27, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], "", 24, false);
+			case 'CRINGE':
 				gfDance.frames = Paths.getSparrowAtlas('BBBump');
 				gfDance.animation.addByIndices('danceLeft', 'BB Title Bump', [14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27], "", 24, false);
 				gfDance.animation.addByIndices('danceRight', 'BB Title Bump', [27, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], "", 24, false);

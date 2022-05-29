@@ -119,24 +119,21 @@ class Character extends FlxSprite
 		switch (curCharacter)
 		{
 			//case 'your character name in case you want to hardcode them instead':
-                modelName = "steve";
-				modelScale = 30;
+			    isModel = false; //it isn't a model... yet.
 				modelSpeed = ["default" => 126 / 75];
-				isModel = true;
-				loadGraphicFromSprite(Main.modelView.sprite);
 				initYaw = -45;
 				initY = -28;
-				updateHitbox();
-				noLoopList = ["idle", "singLEFT", "singRIGHT", "singDOWN", "singUP"];
 				Main.modelView.light.ambient = 1;
 				Main.modelView.light.specular = 0.0;
 				Main.modelView.light.diffuse = 0.0;
-
+				//might make these get saved to the json later
+        }
 
 
 
 			default:
 				var characterPath:String = 'characters/' + curCharacter + '.json';
+				modelName = curCharacter; //3d shit
 
 				#if MODS_ALLOWED
 				var path:String = Paths.modFolders(characterPath);
@@ -150,7 +147,7 @@ class Character extends FlxSprite
 				if (!Assets.exists(path))
 				#end
 				{
-					path = Paths.getPreloadPath('characters/' + DEFAULT_CHARACTER + '.json'); //If a character couldn't be found, change him to BF just to prevent a crash
+					path = Paths.getPreloadPath('characters/' + DEFAULT_CHARACTER + '.json'); //If a character couldn't be found, change them to BF just to prevent a crash
 				}
 
 				#if MODS_ALLOWED
@@ -168,6 +165,7 @@ class Character extends FlxSprite
 				#if MODS_ALLOWED
 				var modTxtToFind:String = Paths.modsTxt(json.image);
 				var txtToFind:String = Paths.getPath('images/' + json.image + '.txt', TEXT);
+				var md2ToFind:String = Paths.getPath('models/' + json.image + '.md2', TEXT);
 				
 				//var modTextureToFind:String = Paths.modFolders("images/"+json.image);
 				//var textureToFind:String = Paths.getPath('images/' + json.image, new AssetType();
@@ -182,10 +180,11 @@ class Character extends FlxSprite
 
 				if (FileSystem.exists(modTxtToFind) || FileSystem.exists(txtToFind) || Assets.exists(txtToFind))
 				#else
-				if (Assets.exists(Paths.getPath('images/' + json.image + '.md2', TEXT)))
+				if (Assets.exists(Paths.getPath('models/' + json.image + '.md2', TEXT)))
 				#end
 			    {
 				    spriteType = "model";
+				    isModel = true;
 			    }
 				
 				#if MODS_ALLOWED
@@ -217,13 +216,18 @@ class Character extends FlxSprite
                     case "model":
                     //don't do shit. don't need an atlas? don't try to get one. might change this later.
 				}
-				imageFile = json.image; //will be the md2 file if it's a model
+				if (isModel = true) {
+					imageFile = json.image;
+				}
+				else {
+				imageFile = Main.modelView.sprite; //will be the model instead
+			    }
 
 				if(json.scale != 1) {
 					jsonScale = json.scale;
 					setGraphicSize(Std.int(width * jsonScale));
+					modelScale = jsonScale;
 					updateHitbox();
-					//REMEMBER TO ADD CODE HERE TO HAVE THE MODEL'S SCALE BE UPDATED ACCORDINGLLY
 				}
 
 				positionArray = json.position;
@@ -244,6 +248,7 @@ class Character extends FlxSprite
 				if(!ClientPrefs.globalAntialiasing) antialiasing = false;
 
 				animationsArray = json.animations;
+				if (isModel = false) {
 				if(animationsArray != null && animationsArray.length > 0) {
 					for (anim in animationsArray) {
 						var animAnim:String = '' + anim.anim;
@@ -266,6 +271,7 @@ class Character extends FlxSprite
 				}
 				//trace('Loaded file to character ' + curCharacter);
 		}
+	}
 		originalFlipX = flipX;
 
 		if(animOffsets.exists('singLEFTmiss') || animOffsets.exists('singDOWNmiss') || animOffsets.exists('singUPmiss') || animOffsets.exists('singRIGHTmiss')) hasMissAnimations = true;
@@ -343,38 +349,30 @@ class Character extends FlxSprite
 					if(animation.curAnim.finished) playAnim(animation.curAnim.name, false, false, animation.curAnim.frames.length - 3);
 			}
 
-			if (!isPlayer && !isModel)
+			if (!isPlayer)
 			{
-				if (animation.curAnim.name.startsWith('sing'))
+				if (!isModel)
 				{
-					holdTimer += elapsed;
+				    if (model.currentAnim.startsWith('sing'))
+				    {
+					    holdTimer += elapsed;
+				    }
+				}
+				else
+				{
+					if animation.curAnim.name.startsWith('sing'))
+                    {
+                    	holdTimer += elapsed;
+                    }
 				}
 
-				if (holdTimer >= Conductor.stepCrochet * 0.0011 * singDuration)
-				{
-					dance();
-					holdTimer = 0;
-				}
-			}
-
-
-		else if (!isPlayer && isModel)
-		{
-			if (model.currentAnim.startsWith('sing'))
-			{
-				holdTimer += elapsed;
-			}
-
-			var dadVar:Float = 4;
-
-			if (curCharacter == 'dad')
-				dadVar = 6.1;
-			if (holdTimer >= Conductor.stepCrochet * 0.0011 * singDuration)
-			{
-				dance();
-				holdTimer = 0;
-			}
-		}
+				    if (holdTimer >= Conductor.stepCrochet * 0.0011 * singDuration)
+				    {
+					    dance();
+					    holdTimer = 0;
+			    	}
+		    	}
+            }
 
 
 			if(animation.curAnim.finished && animation.getByName(animation.curAnim.name + '-loop') != null)
@@ -384,7 +382,7 @@ class Character extends FlxSprite
 		}
 		super.update(elapsed);
 
-		if (isModel)
+		/*if (isModel)
 		{
 			if (spinYaw)
 			{
@@ -400,8 +398,7 @@ class Character extends FlxSprite
 			{
 				model.addRoll(elapsed * spinRollVal);
 			}
-		}
-	}
+		}*/
 
 	public var danced:Bool = false;
 
@@ -513,5 +510,6 @@ class Character extends FlxSprite
 	public function quickAnimAdd(name:String, anim:String)
 	{
 		animation.addByPrefix(name, anim, 24, false);
+		
 	}
 }
