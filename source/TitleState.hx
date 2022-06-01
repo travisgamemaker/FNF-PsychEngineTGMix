@@ -33,6 +33,7 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
+import flixel.util.FlxStringUtil;
 import lime.app.Application;
 import openfl.Assets;
 
@@ -67,20 +68,19 @@ class TitleState extends MusicBeatState
 
 	var wackyImage:FlxSprite;
 
-	var easterEggKeys:Array<String>;
+	#if TITLE_SCREEN_EASTER_EGG
+	var easterEggKeys:Array<String> = [
+    'SHADOW', 'RIVER', 'SHUBS', 'BBPANZU'
+    ];
+    var allowedKeys:String = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	var easterEggKeysBuffer:String = '';
+    #end
+
+	/*#if CRINGE_TITLE_SCREEN_EASTER_EGG
+	easterEggKeys.insert(0, 'CRINGE');
 	var allowedKeys:String = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	var easterEggKeysBuffer:String = '';
-
-	#if TITLE_SCREEN_EASTER_EGG
-	easterEggKeys.insert(0, 'SHADOW')
-	easterEggKeys.insert(0, 'RIVER')
-	easterEggKeys.insert(0, 'SHUBS')
-	easterEggKeys.insert(0, 'BBPANZU')
-	#end
-
-	#if CRINGE_TITLE_SCREEN_EASTER_EGG
-	easterEggKeys.insert(0, 'CRINGE');
-	#end
+	#end*/
 
 	var mustUpdate:Bool = false;
 	
@@ -116,7 +116,7 @@ class TitleState extends MusicBeatState
 		#if CHECK_FOR_UPDATES
 		if(!closedState) {
 			trace('checking for update');
-			var http = new haxe.Http("https://raw.githubusercontent.com/ShadowMario/FNF-PsychEngine/main/gitVersion.txt");
+			var http = new haxe.Http("https://raw.githubusercontent.com/travisgamemaker/FNF-PsychEngineTGMix/main/gitVersion.txt");
 			
 			http.onData = function (data:String)
 			{

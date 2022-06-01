@@ -86,6 +86,7 @@ class PlayState extends MusicBeatState
 
 
 		//SHADERS
+	public static var animatedShaders:Map<String, DynamicShaderHandler> = new Map<String, DynamicShaderHandler>();
 	public var camGameShaders:Array<ShaderEffect> = [];
 	public var camHUDShaders:Array<ShaderEffect> = [];
 	public var camOtherShaders:Array<ShaderEffect> = [];
@@ -286,6 +287,7 @@ class PlayState extends MusicBeatState
 	public var luaArray:Array<FunkinLua> = [];
 	private var luaDebugGroup:FlxTypedGroup<DebugLuaText>;
 	public var introSoundsSuffix:String = '';
+	public var luaShaders:Map<String, DynamicShaderHandler> = new Map<String, DynamicShaderHandler>();
 
 	// Debug buttons
 	private var debugKeysChart:Array<FlxKey>;
@@ -459,6 +461,12 @@ class PlayState extends MusicBeatState
 				stageFront.setGraphicSize(Std.int(stageFront.width * 1.1));
 				stageFront.updateHitbox();
 				add(stageFront);
+
+				new DynamicShaderHandler('Example', false);
+                var shaderArray = new Array<BitmapFilter>();
+                shaderArray.push(new ShaderFilter(animatedShaders['Example'].shader));
+                camGame.setFilters(shaderArray);
+
 				if(!ClientPrefs.lowQuality) {
 					var stageLight:BGSprite = new BGSprite('stage_light', -125, -100, 0.9, 0.9);
 					stageLight.setGraphicSize(Std.int(stageLight.width * 1.1));
@@ -1420,7 +1428,7 @@ class PlayState extends MusicBeatState
 		#end
 	}
 
-			public function addShaderToCamera(cam:String, effect:ShaderEffect)
+			public function addShaderToCamera(cam:String, effect:Dynamic)
 	{ // STOLE FROM ANDROMEDA
 
 		switch (cam.toLowerCase())
@@ -2698,6 +2706,18 @@ class PlayState extends MusicBeatState
 
 	override public function update(elapsed:Float)
 	{
+		//load dat dad ig
+		if (dad.isModel && !dad.beganLoading)
+		{
+			dad.beganLoading = true;
+			dad.model = new ModelThing(dad.modelType, dad.modelName, Main.modelView, dad.modelScale, dad.modelSpeed, dad.initYaw, dad.initPitch, dad.initRoll,
+				1, dad.initX, dad.initY, dad.initZ, dad.noLoopList, dad.md5Anims);
+			return;
+		}
+		else if (dad.isModel && dad.beganLoading && !dad.model.fullyLoaded)
+		{
+			return;
+		}
 		/*if (FlxG.keys.justPressed.NINE)
 		{
 			iconP1.swapOldIcon();
@@ -2849,6 +2869,9 @@ class PlayState extends MusicBeatState
 		}
 
 		super.update(elapsed);
+
+        //update dat 3d
+		Main.modelView.update();
 
 		scoreTxt.text = 'Score: ' + songScore + ' | Misses: ' + songMisses + ' | Rating: ' + ratingName;
 		if(ratingName != '?')
@@ -3155,7 +3178,24 @@ class PlayState extends MusicBeatState
 		setOnLuas('cameraX', camFollowPos.x);
 		setOnLuas('cameraY', camFollowPos.y);
 		setOnLuas('botPlay', cpuControlled);
+
+		for (shader in animatedShaders)
+		{
+			shader.update(elapsed);
+		}
+		#if LUA_ALLOWED
+		
+for (key => value in luaShaders)
+{
+	value.update(elapsed);
+}
+#end
+
+
 		callOnLuas('onUpdatePost', [elapsed]);
+		for (i in shaderUpdates){
+			i(elapsed);
+		}
 	}
 
 	function openChartEditor()

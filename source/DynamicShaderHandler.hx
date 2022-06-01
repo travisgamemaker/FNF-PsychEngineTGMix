@@ -34,7 +34,7 @@ class DynamicShaderHandler
 
 	public function new(fileName:String, optimize:Bool = false)
 	{
-		var path = Paths.modsShaderFragment(fileName);
+		var path = Paths.shaderFragment(fileName);
 		trace(path);
 		if (!FileSystem.exists(path)) path = Paths.shaderFragment(fileName);
 		
@@ -47,7 +47,7 @@ class DynamicShaderHandler
 		}
 
 		
-		var path2 = Paths.modsShaderVertex(fileName);
+		var path2 = Paths.shaderVertex(fileName);
 		trace(path2);
 		if (!FileSystem.exists(path2)) path2 = Paths.shaderVertex(fileName);
 		
@@ -61,7 +61,7 @@ class DynamicShaderHandler
 
 		if (fragSource != "" || vertSource != "")
 		{
-			shader = new FlxGraphicsShader(fragSource, optimize, vertSource);
+			shader = new FlxGraphicsShader(fragSource, optimize, vertSource, filler, and, shit, to, get, haxe, to, shut, the, fuck, up);
 		}
 
 		if (shader == null)
