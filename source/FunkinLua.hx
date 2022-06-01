@@ -1789,7 +1789,7 @@ class FunkinLua {
 Lua_helper.add_callback(lua, "modifyShaderProperty", function(shaderName:String, propertyName:String, value:Dynamic)
 {
 	//var handler:DynamicShaderHandler = PlayState.instance.luaShaders.get(shaderName);
-	//trace(Reflect.getProperty(handler.shader.data, propertyName));
+	//trace(Reflect.getProperty(handler.shader.datFa, propertyName));
 	//Reflect.setProperty(Reflect.getProperty(handler.shader.data, propertyName), 'value', value);
 	handler.modifyShaderProperty(propertyName, value);
 });

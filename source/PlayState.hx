@@ -462,7 +462,7 @@ class PlayState extends MusicBeatState
 				stageFront.updateHitbox();
 				add(stageFront);
 
-				new DynamicShaderHandler('Example', false);
+				//new DynamicShaderHandler('Example', false);
                 var shaderArray = new Array<BitmapFilter>();
                 shaderArray.push(new ShaderFilter(animatedShaders['Example'].shader));
                 camGame.setFilters(shaderArray);

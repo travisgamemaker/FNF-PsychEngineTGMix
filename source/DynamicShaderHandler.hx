@@ -61,7 +61,7 @@ class DynamicShaderHandler
 
 		if (fragSource != "" || vertSource != "")
 		{
-			shader = new FlxGraphicsShader(fragSource, optimize, vertSource, filler, and, shit, to, get, haxe, to, shut, the, fuck, up);
+			shader = new FlxGraphicsShader(fragSource, optimize, vertSource);
 		}
 
 		if (shader == null)
