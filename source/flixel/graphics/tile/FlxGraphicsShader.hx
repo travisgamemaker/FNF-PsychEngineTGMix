@@ -1,6 +1,7 @@
 package flixel.graphics.tile;
 
 import openfl.display.ShaderParameter;
+import openfl.utils.ByteArray;
 import sys.io.File;
 #if FLX_DRAW_QUADS
 import openfl.display.GraphicsShader;
@@ -13,19 +14,17 @@ class FlxGraphicsShader extends GraphicsShader
 	public var colorOffset:ShaderParameter<Float>;
 	public var hasTransform:ShaderParameter<Bool>;
 	public var hasColorTransform:ShaderParameter<Bool>;
+	public var glFragmentHeader = "";
+	public var glVertexHeader = "";
+	public var errorShit:Dynamic = '#pragma header'; //istfg if this doesn't work
 
 	/* 
 		To avoid conflicts this constructor adds the flixel vars and uniforms to the sources, 
 		Add them yourself if you are going to use the super class directly.
 	 */
 	public function new(?fragSource:String = "", optimize:Bool = false,vertxSource:String = "")
-	{
-		super( // Vertex
-			"#pragma header
-			", // Fragment
-
-			"#pragma header
-			", false);
+	{ //fuck you haxeflixel
+		super();
 
 		glFragmentHeader += "uniform bool hasTransform;
 		uniform bool hasColorTransform;
@@ -117,6 +116,7 @@ class FlxGraphicsShader extends GraphicsShader
 		colorOffset = data.colorOffset;
 		hasTransform = data.hasTransform;
 		hasColorTransform = data.hasColorTransform;
+		super();
 	}
 }
 #end

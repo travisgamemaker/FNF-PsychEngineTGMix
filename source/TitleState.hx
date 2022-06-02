@@ -70,17 +70,11 @@ class TitleState extends MusicBeatState
 
 	#if TITLE_SCREEN_EASTER_EGG
 	var easterEggKeys:Array<String> = [
-    'SHADOW', 'RIVER', 'SHUBS', 'BBPANZU'
+    'SHADOW', 'RIVER', 'SHUBS', 'BBPANZU', 'CRINGE'
     ];
     var allowedKeys:String = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	var easterEggKeysBuffer:String = '';
     #end
-
-	/*#if CRINGE_TITLE_SCREEN_EASTER_EGG
-	easterEggKeys.insert(0, 'CRINGE');
-	var allowedKeys:String = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-	var easterEggKeysBuffer:String = '';
-	#end*/
 
 	var mustUpdate:Bool = false;
 	
