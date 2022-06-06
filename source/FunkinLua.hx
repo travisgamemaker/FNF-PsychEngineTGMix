@@ -253,7 +253,7 @@ class FunkinLua {
 			}
 
 			var cervix = luaFile + ".lua";
-			if(luaFile.endsWith(".lua"))cervix-luaFile;
+			if(luaFile.endsWith(".lua"))cervix=luaFile;
 			var doPush = false;
 
 			#if MODS_ALLOWED
@@ -1409,13 +1409,13 @@ class FunkinLua {
 		});
 
 				Lua_helper.add_callback(lua, "createMsgBox", function(textInBox:String, resultStr:String) {
-					lime.app.Application.current.window.alert(resultStr, textInBox); //i have no idea wtf i'm doing tbh
+					lime.app.Application.current.window.alert(textInBox); //i have no idea wtf i'm doing tbh
 		});
 
 				//jjhhhbbbbbhgb sorry bug on the keyboard again
 
 		Lua_helper.add_callback(lua, "addAnimationByPrefix", function(obj:String, name:String, prefix:String, framerate:Int = 24, loop:Bool = true) {
-			if(PlayState.instance.getLuaObject.exists(obj,false)!=null) {
+			if(PlayState.instance.getLuaObject(obj,false)!=null) {
 				var cock:FlxSprite = PlayState.instance.getLuaObject(obj,false);
 				cock.animation.addByPrefix(name, prefix, framerate, loop);
 				if(cock.animation.curAnim == null) {
@@ -1606,7 +1606,7 @@ class FunkinLua {
 		});
 
 		Lua_helper.add_callback(lua, "removeLuaSprite", function(tag:String, destroy:Bool = true) {
-			if(!PlayState.instance.getLuaObject(tag)) {
+			if(!PlayState.instance.modchartSprites.exists(tag)) {
 				return;
 			}
 			
@@ -2739,6 +2739,15 @@ Lua_helper.add_callback(lua, "clearShadersFromCamera", function(cameraName)
 	{
 		return PlayState.instance.isDead ? GameOverSubstate.instance : PlayState.instance;
 	}
+		static inline var CLENSE:String = "
+	os.execute = nil;
+	os.exit = nil;
+	package.loaded.os.execute = nil;
+	package.loaded.os.exit = nil;
+	process = nil;
+	package.loaded.process = nil;
+
+	"; // Fuck this, I can't figure out linc_lua, so I'mma set everything in Lua itself - Super
 }
 
 class ModchartSprite extends FlxSprite

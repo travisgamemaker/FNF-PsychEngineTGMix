@@ -2108,9 +2108,9 @@ class PlayState extends MusicBeatState
 				setSongTime(startOnTime - 350);
 				return;
 			}
-			else if (skipCoundown)
+			else if (skipCountdown)
 			{
-				setSongTIme(0);
+				setSongTime(0);
 				return;
 			}
 
