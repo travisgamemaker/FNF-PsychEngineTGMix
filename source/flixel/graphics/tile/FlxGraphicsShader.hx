@@ -23,7 +23,7 @@ class FlxGraphicsShader extends GraphicsShader
 		Add them yourself if you are going to use the super class directly.
 	 */
 	public function new(?fragSource:String = "", optimize:Bool = false,vertxSource:String = "")
-	{ //fuck you haxeflixel
+	{ //fuck you, haxeflixel. fuck. you.
 		super();
 
 		glFragmentHeader += "uniform bool hasTransform;
@@ -116,7 +116,7 @@ class FlxGraphicsShader extends GraphicsShader
 		colorOffset = data.colorOffset;
 		hasTransform = data.hasTransform;
 		hasColorTransform = data.hasColorTransform;
-		super();
 	}
 }
+
 #end

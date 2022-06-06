@@ -58,6 +58,7 @@ class TitleState extends MusicBeatState
 
 	public static var initialized:Bool = false;
 
+
 	var blackScreen:FlxSprite;
 	var credGroup:FlxGroup;
 	var credTextShit:Alphabet;
@@ -87,6 +88,7 @@ class TitleState extends MusicBeatState
 		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
 
+        Paths.pushGlobalMods();
 		// Just to load a mod on start up if ya got one. For mods that change the menu music and bg
 		WeekData.loadTheFirstEnabledMod();
 		
@@ -146,6 +148,8 @@ class TitleState extends MusicBeatState
 		swagShader = new ColorSwap();
 		super.create();
 
+		trace('the piss bag');
+
 		FlxG.save.bind('funkin', 'ninjamuffin99');
 		
 		ClientPrefs.loadPrefs();
@@ -159,6 +163,7 @@ class TitleState extends MusicBeatState
 		if (FlxG.save.data.psychDevsEasterEgg == null) FlxG.save.data.psychDevsEasterEgg = ''; //Crash prevention
 		switch(FlxG.save.data.psychDevsEasterEgg.toUpperCase())
 		{
+			trace('if this is in console then its not a problem with the jsons'); //here for debug shit
 			case 'SHADOW':
 				titleJSON.gfx += 210;
 				titleJSON.gfy += 40;
@@ -177,10 +182,15 @@ class TitleState extends MusicBeatState
 		}
 		#end
 
-		if(!initialized && FlxG.save.data != null && FlxG.save.data.fullscreen)
+		if(!initialized)
 		{
-			FlxG.fullscreen = FlxG.save.data.fullscreen;
-			//trace('LOADED FULLSCREEN SETTING!!');
+		    if(FlxG.save.data != null && FlxG.save.data.fullscreen)
+			{
+				FlxG.fullscreen = FlxG.save.data.fullscreen;
+				//trace('LOADED FULLSCREEN SETTING!!');
+			}
+			persistentUpdate = true;
+			persistentDraw = true;
 		}
 
 		if (FlxG.save.data.weekCompleted != null)
