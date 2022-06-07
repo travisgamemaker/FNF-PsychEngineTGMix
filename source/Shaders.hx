@@ -5,9 +5,22 @@ import openfl.display.BitmapData;
 import openfl.display.Shader;
 import openfl.display.ShaderInput;
 import openfl.utils.Assets;
+import openfl.display.ShaderParameterType;
+import openfl.display.GraphicsShader;
+import flixel.graphics.tile.FlxGraphicsShader;
+import haxe.io.Bytes;
+import openfl.display.ShaderParameter;
+import haxe.Exception;
+import sys.FileSystem;
+import sys.io.File;
+import haxe.io.Path;
+import openfl.display.DisplayObject;
+import openfl.events.EventDispatcher;
+
 
 import flixel.FlxG;
 import openfl.Lib;
+
 using StringTools;
 typedef ShaderEffect = {
   var shader:Dynamic;
@@ -839,10 +852,36 @@ class ColorShiftSwapShader extends FlxShader {
 }
 
 
+//FlxGraphicShader override doesn't work so i'll give this a try
+
+/*class CustomShader extends Effect {
+    public var shader:CustomShaderShader = new CustomShaderShader();
+    public var frag(default, set):String = '';
+    public var vert(default, set):String = '';
+    public function new(frag:String='',optimize:Bool=false,vert:String='')
+	  {
+		vertGert = [vert];
+		fragFrog = [frag];
+		//optimize doesn't do shit lol
+	  }
+}
+
+//shit.
+//well, it was worth a shot.
+//sorry!
 
 
 
+class CustomShaderShader extends FlxShader {
+    @:glFragmentSource(fragFrog)
+	@:glVertexSource(vertGert)
+public function new()
+	{
+		super();
+	}
+}
 
+*/
 
 
 //Boing! by ThaeHan

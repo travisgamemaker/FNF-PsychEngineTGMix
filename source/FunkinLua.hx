@@ -340,11 +340,11 @@ class FunkinLua {
 					if(luaInstance.scriptName == cervix)
 					{
 						Lua.getglobal(luaInstance.lua, global);
-						if(Lua.isnumber(luaInstance.lua,-1)){
+						if(Lua.isnumber(luaInstance.lua,-1)!=false){
 							Lua.pushnumber(lua, Lua.tonumber(luaInstance.lua, -1));
-						}else if(Lua.isstring(luaInstance.lua,-1)){
+						}else if(Lua.isstring(luaInstance.lua,-1)!=false){
 							Lua.pushstring(lua, Lua.tostring(luaInstance.lua, -1));
-						}else if(Lua.isboolean(luaInstance.lua,-1)){
+						}else if(Lua.isboolean(luaInstance.lua,-1)!=Std.parseFloat('false')){
 							Lua.pushboolean(lua, Lua.toboolean(luaInstance.lua, -1));
 						}else{
 							Lua.pushnil(lua);
@@ -450,7 +450,7 @@ class FunkinLua {
 							}else if(Lua.isstring(luaInstance.lua,-2)){
 								Lua.pushstring(lua, Lua.tostring(luaInstance.lua, -2));
 								pop++;
-							}else if(Lua.isboolean(luaInstance.lua,-2)){
+							}else if(Lua.isboolean(luaInstance.lua,-2)!=Std.parseFloat('false')){
 								Lua.pushboolean(lua, Lua.toboolean(luaInstance.lua, -2));
 								pop++;
 							}
@@ -464,7 +464,7 @@ class FunkinLua {
 							}else if(Lua.isstring(luaInstance.lua,-1)){
 								Lua.pushstring(lua, Lua.tostring(luaInstance.lua, -1));
 								pop++;
-							}else if(Lua.isboolean(luaInstance.lua,-1)){
+							}else if(Lua.isboolean(luaInstance.lua,-1)!=Std.parseFloat('false')){
 								Lua.pushboolean(lua, Lua.toboolean(luaInstance.lua, -1));
 								pop++;
 							}
@@ -2256,7 +2256,7 @@ class FunkinLua {
 
  
  //forgot this shit
-		Lua_helper.add_callback(lua, "createShaders", function(shaderName:String, ?optimize:Bool = false)
+/*		Lua_helper.add_callback(lua, "createShaders", function(shaderName:String, ?optimize:Bool = false)
 {
 	var shader = new DynamicShaderHandler(shaderName, optimize);
 
@@ -2279,7 +2279,7 @@ Lua_helper.add_callback(lua, "setShadersToCamera", function(shaderName:Array<Str
 
 	for (i in shaderName)
 	{
-		shaderArray.push(new ShaderFilter(PlayState.instance.luaShaders[i].shader));
+		//shaderArray.push(new ShaderFilter(PlayState.instance.luaShaders[i].shader));
 	}
 
 	cameraFromString(cameraName).setFilters(shaderArray);
@@ -2633,7 +2633,7 @@ Lua_helper.add_callback(lua, "clearShadersFromCamera", function(cameraName)
 			if(lua==null)return Function_Continue;
 
 			Lua.getglobal(lua, func);
-			if(Lua.isfunction(lua, -1)==true){
+			if(Lua.isfunction(lua, -1)!=Std.parseFloat('false')){
 				for(arg in args) Convert.toLua(lua, arg);
 				var result: Dynamic = Lua.pcall(lua, args.length, 1, 0);
 				if(result!=0){
@@ -2766,12 +2766,12 @@ class ModchartSprite extends FlxSprite
 
 			makeGraphic(FlxG.width, FlxG.height, FlxColor.TRANSPARENT);
 
-			hShader = new DynamicShaderHandler(type, optimize);
+			hShader = /*new DynamicShaderHandler(type, optimize);*/ null;
 
-			if (hShader.shader != null)
-			{
-				shader = hShader.shader;
-			}
+			//if (hShader.shader != null)
+			//{
+				//shader = hShader.shader;
+			//}
 
 			antialiasing = FlxG.save.data.antialiasing;
 			}

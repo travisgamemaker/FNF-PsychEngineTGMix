@@ -492,7 +492,7 @@ class PlayState extends MusicBeatState
 
 				//new DynamicShaderHandler('Example', false);
                 var shaderArray = new Array<BitmapFilter>();
-                shaderArray.push(new ShaderFilter(animatedShaders['Example'].shader));
+                //shaderArray.push(new ShaderFilter(animatedShaders['Example'].shader));
                 camGame.setFilters(shaderArray);
 
 				if(!ClientPrefs.lowQuality) {
@@ -3260,13 +3260,13 @@ class PlayState extends MusicBeatState
 
 		for (shader in animatedShaders)
 		{
-			shader.update(elapsed);
+			//shader.update(elapsed);
 		}
 		#if LUA_ALLOWED
 		
 for (key => value in luaShaders)
 {
-	value.update(elapsed);
+	//value.update(elapsed);
 }
 #end
 

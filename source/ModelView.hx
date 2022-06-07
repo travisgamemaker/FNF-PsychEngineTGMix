@@ -28,6 +28,7 @@ import openfl.ui.*;
 import openfl.utils.ByteArray;
 import openfl.Assets;
 import openfl.Vector;
+import Character;
 
 class ModelView
 {
@@ -89,6 +90,7 @@ class ModelView
 
 	public function update()
 	{
+		if (isModel) {
 		// DD: Time to turn the whole 3D View into a 2D FlxSprite
 		// Why? Well, 3D in OpenFL is ALWAYS rendered below the 2D stuff
 		// i.e. 3D stuff is never visible if 2D stuff is there too
@@ -102,6 +104,7 @@ class ModelView
 
 		sprite.loadGraphic(bmd);
 		sprite.graphic.persist = true;
+	    
 
 		// if (thingy)
 		// {
@@ -112,6 +115,7 @@ class ModelView
 		// 	fo.close();
 		// 	thingy = false;
 		// }
+	    }
 	}
 
 	public function addModel(model:Mesh)

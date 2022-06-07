@@ -22,6 +22,7 @@ import openfl.utils.AssetType;
 import openfl.utils.Assets;
 import haxe.Json;
 import haxe.format.JsonParser;
+import ModelView;
 
 using StringTools;
 
@@ -134,6 +135,7 @@ class Character extends FlxSprite
 
 			default:
 			    isModel = false; //it isn't a model... yet.
+			    this.isModel = isModel;
 			    initYaw = -45;
 			    initY = -28;
 				Main.modelView.light.ambient = 1;
@@ -183,6 +185,7 @@ class Character extends FlxSprite
 				if (Assets.exists(Paths.getPath('images/' + json.image + '.txt', TEXT)))
 				#end
 				{
+					isModel = false;
 					spriteType = "packer";
 				}
 

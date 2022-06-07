@@ -4,6 +4,7 @@ import openfl.display.GraphicsShader;
 import flixel.FlxG;
 import flixel.graphics.tile.FlxGraphicsShader;
 import sys.FileSystem;
+import Shaders;
 
 /*
 	Class to handle animated shaders, calling the new consturctor is enough, 
@@ -17,7 +18,7 @@ import sys.FileSystem;
 	Optimize variable might help with some heavy shaders but only makes a difference on decent Intel CPUs.
 
 	@author Kemo
-
+ 
 	Please respect the effort but to this and credit us if used :]
 	
 	
@@ -27,7 +28,7 @@ import sys.FileSystem;
  
 class DynamicShaderHandler
 {
-	public var shader:FlxGraphicsShader;
+	public var shader:Dynamic;
 
 	private var bHasResolution:Bool = false;
 	private var bHasTime:Bool = false;
@@ -61,7 +62,7 @@ class DynamicShaderHandler
 
 		if (fragSource != "" || vertSource != "")
 		{
-			shader = new FlxGraphicsShader(fragSource, optimize, vertSource);
+			shader = null /*new CustomShader(fragSource, optimize, vertSource)*/; //:(
 		}
 
 		if (shader == null)
